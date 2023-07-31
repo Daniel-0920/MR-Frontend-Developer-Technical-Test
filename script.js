@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedSizeElement = document.getElementById('size');
     const cartItemsList = document.getElementById('cart-items');
 
+
     let cartItems = [];
 
 
@@ -58,6 +59,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error fetching product sizes:', error));
     }
 
+    function updateCartItemCount() {
+        const myCartButton = document.getElementById('my-cart');
+        const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+        myCartButton.textContent = `My Cart (${totalQuantity})`;
+    }
+
     function addToCart() {
 
         const selectedOption = selectedSizeElement.options[selectedSizeElement.selectedIndex];
@@ -65,37 +72,86 @@ document.addEventListener('DOMContentLoaded', function() {
             const existingItem = cartItems.find(item => item.size === selectedOption.value);
 
             if (existingItem) {
-                // If the same size is already in the cart, increase the quantity
                 existingItem.quantity += 1;
             } else {
-                // If the size is not in the cart, add a new item
                 const newItem = {
-                    itemName: data.title, // You can set the actual item name here
-                    size: selectedOption.value, // Use the text content of the selected option (size label)
-                    quantity: 1 // Initialize the quantity to 1 for the new item
+                    title: data.title,
+                    size: selectedOption.value,
+                    quantity: 1,
+                    price: data.price,
+                    imageURL: data.imageURL
                 };
                 cartItems.push(newItem);
             }
 
             displayCartItems();
+            updateCartItemCount();
         } else {
             alert('Please select a size before adding to cart.');
         }
 
     }
 
+
+    fetchProductSizes();
+    addToCartButton.addEventListener('click', addToCart);
+
     function displayCartItems() {
-        cartItemsList.innerHTML = ''; // Clear the existing items
+        cartItemsList.innerHTML = '';
 
         cartItems.forEach(item => {
             const listItem = document.createElement('li');
-            listItem.textContent = `${item.itemName} - Size: ${item.size} - Quantity: ${item.quantity}`;
+
+            const imageElement = document.createElement('img');
+            imageElement.src = item.imageURL;
+            imageElement.alt = item.title;
+
+
+
+            const infoWrapper = document.createElement('div');
+            infoWrapper.classList.add('item-info-wrapper');
+
+
+            const nameElement = document.createElement('span');
+            nameElement.textContent = item.title;
+            infoWrapper.appendChild(nameElement);
+
+            infoWrapper.appendChild(document.createElement('br'));
+
+            const quantityElement = document.createElement('span');
+            quantityElement.textContent = `${item.quantity} x `;
+            infoWrapper.appendChild(quantityElement);
+
+            const priceElement = document.createElement('span');
+            priceElement.textContent = `$${item.price}.00`;
+            priceElement.classList.add('bold-price');
+            infoWrapper.appendChild(priceElement);
+
+            infoWrapper.appendChild(document.createElement('br'));
+
+            const sizeElement = document.createElement('span');
+            sizeElement.textContent = `Size: ${item.size}`;
+            infoWrapper.appendChild(sizeElement);
+
+            listItem.appendChild(imageElement);
+            listItem.appendChild(infoWrapper);
+
             cartItemsList.appendChild(listItem);
         });
     }
 
-    fetchProductSizes();
-    addToCartButton.addEventListener('click', addToCart);
+    function toggleCartPopup() {
+        const cartPopup = document.querySelector('.my-cart-popup');
+        cartPopup.classList.toggle('show');
+
+    }
+
+    const myCartButton = document.getElementById('my-cart');
+    myCartButton.addEventListener('click', toggleCartPopup);
+
+
+
+
 })
 
 
