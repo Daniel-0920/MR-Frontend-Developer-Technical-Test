@@ -46,6 +46,35 @@
     padding-top: 10px;
 }
 
+.size-box {
+    display: inline-block;
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.selected-size {
+    display: block;
+}
+
+.options-overlay {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    z-index: 1;
+}
+
+.option {
+    display: block;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
 body {
     font-family: "Arial", sans-serif;
 }
