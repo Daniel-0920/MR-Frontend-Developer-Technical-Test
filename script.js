@@ -1,3 +1,5 @@
+let data;
+
 async function fetchData() {
     try {
         const response = await fetch('https://3sb655pz3a.execute-api.ap-southeast-2.amazonaws.com/live/product');
@@ -18,22 +20,28 @@ function updateProductDetails(data) {
     const productNameElement = document.querySelector('.product-name');
     const productPriceElement = document.querySelector('.product-price');
     const productExplanationElement = document.querySelector('.product-explaination');
-    // const productSizeElement = document.querySelector('.product-size');
     const productImageElement = document.querySelector('.product-image');
 
     if (data) {
         productNameElement.textContent = data.title;
-        productPriceElement.textContent = `$${data.price}.00`;
+        productPriceElement.textContent = `$${data.price}.00`; //TODO
         productExplanationElement.textContent = data.description;
-        // productSizeElement.textContent = `${data.sizeOptions.map(size => size.label).join(', ')}`;
         productImageElement.innerHTML = `<img src="${data.imageURL}" alt="${data.title}" />`;
     } else {
         productNameElement.textContent = 'Error fetching product details';
     }
 }
 
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const sizeDropdown = document.getElementById('size');
+    const addToCartButton = document.getElementById('add-to-cart');
+    const selectedSizeElement = document.getElementById('size');
+    const cartItemsList = document.getElementById('cart-items');
+
+    let cartItems = [];
+
 
     function fetchProductSizes() {
         fetch('https://3sb655pz3a.execute-api.ap-southeast-2.amazonaws.com/live/product')
@@ -42,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const sizeOptions = data.sizeOptions;
                 sizeOptions.forEach(size => {
                     const option = document.createElement('option');
-                    option.value = size.id;
+                    option.value = size.label;
                     option.textContent = size.label;
                     sizeDropdown.appendChild(option);
                 });
@@ -50,11 +58,49 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error fetching product sizes:', error));
     }
 
+    function addToCart() {
+
+        const selectedOption = selectedSizeElement.options[selectedSizeElement.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            const existingItem = cartItems.find(item => item.size === selectedOption.value);
+
+            if (existingItem) {
+                // If the same size is already in the cart, increase the quantity
+                existingItem.quantity += 1;
+            } else {
+                // If the size is not in the cart, add a new item
+                const newItem = {
+                    itemName: data.title, // You can set the actual item name here
+                    size: selectedOption.value, // Use the text content of the selected option (size label)
+                    quantity: 1 // Initialize the quantity to 1 for the new item
+                };
+                cartItems.push(newItem);
+            }
+
+            displayCartItems();
+        } else {
+            alert('Please select a size before adding to cart.');
+        }
+
+    }
+
+    function displayCartItems() {
+        cartItemsList.innerHTML = ''; // Clear the existing items
+
+        cartItems.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${item.itemName} - Size: ${item.size} - Quantity: ${item.quantity}`;
+            cartItemsList.appendChild(listItem);
+        });
+    }
+
     fetchProductSizes();
+    addToCartButton.addEventListener('click', addToCart);
 })
 
+
 async function onPageLoad() {
-    const data = await fetchData();
+    data = await fetchData();
     updateProductDetails(data);
 }
 

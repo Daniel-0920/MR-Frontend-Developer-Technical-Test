@@ -46,33 +46,23 @@
     padding-top: 10px;
 }
 
-.size-box {
-    display: inline-block;
-    position: relative;
-    border: 1px solid #ccc;
-    padding: 10px;
-    cursor: pointer;
+.product-size {
+    padding-bottom: 100px;
 }
 
-.selected-size {
-    display: block;
+#add-to-cart {
+    width: 150px;
+    font-size: 11pt;
+    font-weight: bold;
+    border: 2px solid #222222;
+    background-color: #ffffff;
+    color: #222222;
+    padding: 7px 10px;
 }
 
-.options-overlay {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    z-index: 1;
-}
-
-.option {
-    display: block;
-    padding: 5px 10px;
-    cursor: pointer;
+#add-to-cart:hover {
+    background-color: #222222;
+    color: #ffffff;
 }
 
 body {
