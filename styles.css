@@ -92,9 +92,7 @@
     border: 1px solid #888888;
     display: none;
     top: 100%;
-    /* Position the popup below the button */
     right: 6%;
-    /* Align the popup to the right */
 }
 
 .my-cart-popup img {
