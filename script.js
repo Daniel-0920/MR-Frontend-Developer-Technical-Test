@@ -23,9 +23,9 @@ function updateProductDetails(data) {
 
     if (data) {
         productNameElement.textContent = data.title;
-        productPriceElement.textContent = `Price: $${data.price}`;
+        productPriceElement.textContent = `$${data.price}.00`;
         productExplanationElement.textContent = data.description;
-        productSizeElement.textContent = `Available Sizes: ${data.sizeOptions.map(size => size.label).join(', ')}`;
+        productSizeElement.textContent = `${data.sizeOptions.map(size => size.label).join(', ')}`;
         productImageElement.innerHTML = `<img src="${data.imageURL}" alt="${data.title}" />`;
     } else {
         productNameElement.textContent = 'Error fetching product details';
