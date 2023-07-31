@@ -142,8 +142,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function toggleCartPopup() {
         const cartPopup = document.querySelector('.my-cart-popup');
-        cartPopup.classList.toggle('show');
-
+        if (cartItems.length === 0) {
+            cartPopup.classList.remove('show');
+        } else {
+            cartPopup.classList.toggle('show');
+        }
     }
 
     const myCartButton = document.getElementById('my-cart');
